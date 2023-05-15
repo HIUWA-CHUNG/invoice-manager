@@ -1,2 +1,7 @@
-# invoice-manager
-This repository contains the starter files for the invoice manager project. 
+# Invoice Manager
+- Name: **Your Name**
+- Student Number: **Your Student Number**
+- Section Number: **Course Section Number**
+
+
+
