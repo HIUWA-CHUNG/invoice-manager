@@ -3,11 +3,11 @@
 - Student Number: **041058137**
 - Section Number: **CST8257-300**
 
-What challenges did you face in completing this assignment?
-- To filiter the data in different status
+- What validation techniques did you use for this project?
+I used regular expressions for the emails, the empty function to check if values were empty, filter_var with the filters and in_ array provided by PHP 
 
-What did you find most interesting about creating PHP templates?
-- I can reuse the code by uding require/include
+- In your own words, why is it important to add validation to the forms?
+To keep the data accuracy, easy to manage and security.
 
-How does PHP differ from other programming languages you have used?
-- I can bulid-in the php code with html
+- What improvements or changes would you make to the project either in additional features or improvement in the existing code?
+update and delete the invoices
