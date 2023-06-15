@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     extract($data);
 
     $errors = [];
-
+    
+// validation for adding
     if (empty($client)) {
         $errors["client"] = "Name is required";
     } else if (!preg_match('/^[A-Za-z\s]{0,255}$/', $client)) {
@@ -51,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     } else if (!in_array($status, $statuses)) {
         $errors["status"] = "Status is not valid";
     }
-
+// if the validation is good
     if (!$errors) {
         session_start();
 

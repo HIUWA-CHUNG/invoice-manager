@@ -1,10 +1,10 @@
 <?php
 require "data.php";
 
-function sanitize($data)
-{
+function sanitize($data)       // remove unwanted and malicious characters from  
+{ 
     return array_map(function ($value) {
-        return htmlspecialchars(stripslashes(trim($value)));
+        return htmlspecialchars(stripslashes(trim($value)));        // remove the space from ends and backslashes, converts special characters to HTML
     }, $data);
 }
 
@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     extract($data);
 
     $errors = [];
-
+// validation for updating
     if (empty($client)) {
         $errors["client"] = "Name is required";
     } else if (!preg_match('/^[A-Za-z\s]{0,255}$/', $client)) {
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else if (!in_array($status, $statuses)) {
         $errors["status"] = "Status is not valid";
     }
-
+// if the validation is good
     if (!$errors) {
         $updated_invoice = [
             'number' => $_GET["client"],

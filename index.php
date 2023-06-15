@@ -6,13 +6,14 @@ function filter($arr)
     global $status;
     if ($status == "all") {
         return true;
-    } elseif ($arr["status"] == $status) {
+    } elseif ($arr["status"] == $status) {          // comparing if status matched
         return true;
     }
 }
 
-$status = $_GET['status'] ?? "all";
+$status = $_GET['status'] ?? "all";               // if doesn't exist, will returns to all
 
+// session start and store new data
 session_start();
 
 if (isset($_SESSION['invoices'])) {
@@ -21,6 +22,7 @@ if (isset($_SESSION['invoices'])) {
     $sessionArray = $invoices;
 }
 
+//filters invoices based on the status provided in $arrayStatus
 $items = array_filter($sessionArray, "filter");
 
 $invoice_count = count($items);
