@@ -1,16 +1,15 @@
 <?php
 require "data.php";
+require "db.php";
 
-function sanitize($data)       // remove unwanted and malicious characters from  
-{ 
+function sanitize($data)
+{
     return array_map(function ($value) {
-        return htmlspecialchars(stripslashes(trim($value)));        // remove the space from ends and backslashes, converts special characters to HTML
+        return htmlspecialchars(stripslashes(trim($value)));
     }, $data);
 }
 
-session_start();
-
-$submissions = $_SESSION['invoices'];
+$submissions = getAllInvoices();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -19,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     extract($data);
 
     $errors = [];
-// validation for updating
+
     if (empty($client)) {
         $errors["client"] = "Name is required";
     } else if (!preg_match('/^[A-Za-z\s]{0,255}$/', $client)) {
@@ -43,32 +42,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else if (!in_array($status, $statuses)) {
         $errors["status"] = "Status is not valid";
     }
-// if the validation is good
+
     if (!$errors) {
         $updated_invoice = [
-            'number' => $_GET["client"],
+            'number' => $_GET["number"],
             'amount' => $_POST["amount"],
             'client' => $_POST["client"],
             'status' => $_POST["status"],
             'email' => $_POST["email"],
         ];
 
-        $submissions = array_map(function ($invoice) use ($updated_invoice) {
-            if ($invoice["number"] == $updated_invoice["number"]) {
-                return $updated_invoice;
-            }
-            return $invoice;
-        }, $submissions);
-
-        $_SESSION['invoices'] = $submissions;
+        updateInvoice($updated_invoice);
 
         header('Location: index.php');
     }
 }
 
-if (isset($_GET["client"])) {
+if (isset($_GET["number"])) {
     $invoice_to_edit = current(array_filter($submissions, function ($submission) {
-        return $submission["number"] == $_GET["client"];
+        return $submission["number"] == $_GET["number"];
     }));
 
     if (!$invoice_to_edit) {
@@ -89,7 +81,7 @@ if (isset($_GET["client"])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <title>Lab 4 - Edit Invoice</title>
+    <title>Lab 2 - Edit Invoice</title>
 </head>
 
 <body>

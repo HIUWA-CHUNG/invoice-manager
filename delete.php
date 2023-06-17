@@ -1,17 +1,9 @@
 <?php
 
-session_start();
-
-$submissions = $_SESSION['invoices'];
+require "db.php";
 
 if (isset($_POST["number"])) {
-    $index = array_key_first(array_filter($submissions, function ($invoice) {
-        return $invoice["number"] == $_POST["number"];
-    }));
-
-    unset($submissions[$index]);
-
-    $_SESSION['invoices'] = $submissions;
+    deleteInvoice($_POST["number"]);
 }
 
 header("Location: index.php");

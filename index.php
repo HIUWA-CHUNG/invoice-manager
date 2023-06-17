@@ -1,33 +1,26 @@
 <?php
 require "data.php";
+require "db.php";
+
 
 function filter($arr)
 {
     global $status;
     if ($status == "all") {
         return true;
-    } elseif ($arr["status"] == $status) {          // comparing if status matched
+    } elseif ($arr["status"] == $status) {
         return true;
     }
 }
 
-$status = $_GET['status'] ?? "all";               // if doesn't exist, will returns to all
+$status = $_GET['status'] ?? "all";
 
-// session start and store new data
-session_start();
+$allItems = getAllInvoices();
 
-if (isset($_SESSION['invoices'])) {
-    $sessionArray = $_SESSION['invoices'];
-} else {
-    $sessionArray = $invoices;
-}
-
-//filters invoices based on the status provided in $arrayStatus
-$items = array_filter($sessionArray, "filter");
+$items = array_filter($allItems, "filter");
 
 $invoice_count = count($items);
 
-$_SESSION['invoices'] = $sessionArray;
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +30,7 @@ $_SESSION['invoices'] = $sessionArray;
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 4 - <?php echo ucfirst($status) ?></title>
+    <title>Lab 5 (part4) - <?php echo ucfirst($status) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -114,15 +107,19 @@ $_SESSION['invoices'] = $sessionArray;
                         }
                         ?>
                         <div class="col-2 d-flex align-items-center justify-content-center pl-2">
-                            <a href="update.php?client=<?php echo $item["number"] ?>">
+                            <a href="update.php?number=<?php echo $item["number"] ?>">
+                                <span class="material-icons">
                                     edit
+                                </span>
                             </a>
                         </div>
                         <div class="col-2 d-flex align-items-center justify-content-center">
                             <form action="delete.php" method="post">
                                 <input type="hidden" name="number" placeholder="Client Number" value="<?php echo $item["number"] ?>">
                                 <button type="submit" class="btn btn-danger btn-sm">
-                                    Delete
+                                    <span class="material-icons">
+                                        clear
+                                    </span>
                                 </button>
                             </form>
                         </div>

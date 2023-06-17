@@ -1,6 +1,7 @@
 <?php
 
 require "data.php";
+require "db.php";
 
 function getInvoiceNumber($length = 5)
 {
@@ -27,8 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     extract($data);
 
     $errors = [];
-    
-// validation for adding
+
     if (empty($client)) {
         $errors["client"] = "Name is required";
     } else if (!preg_match('/^[A-Za-z\s]{0,255}$/', $client)) {
@@ -52,9 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     } else if (!in_array($status, $statuses)) {
         $errors["status"] = "Status is not valid";
     }
-// if the validation is good
+
     if (!$errors) {
-        session_start();
 
         $submission = array(
             'number' => getInvoiceNumber(),
@@ -64,15 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             'email' => $_POST['email'],
         );
 
-        $submissions = $_SESSION['invoices'];
+        addInvoice($submission);
 
-        array_push($submissions, $submission);
-
-        $_SESSION['invoices'] = $submissions;
         header("Location: index.php");
     }
 }
-
 
 ?>
 
@@ -84,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <title>Lab 4 - Add Invoice</title>
+    <title>Lab 2 - Add Invoice</title>
 </head>
 
 <body>
@@ -126,10 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 <div class="pb-3">
                     <label class="form-label" for="status">Invoice Status</label>
                     <select class="form-select <?php if (isset($errors['status'])) :  ?> is-invalid <?php endif; ?>" id="status" name="status">
-                        <option value="" <?php (isset($status) && $status == "") ? "selected" : "" ?>>Select a Status</option>
-                        <option value=" paid" <?php (isset($status) && $status == "paid") ? "selected" : "" ?>>Paid</option>
-                        <option value="draft" <?php (isset($status) && $status == "draft") ? "selected" : "" ?>>Draft</option>
-                        <option value="pending" <?php (isset($status) && $status == "pending") ? "selected" : "" ?>>Pending</option>
+                        <option value="" <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $status == "") echo "selected" ?>>Select a Status</option>
+                        <option value="paid" <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $status == "paid") echo "selected" ?>>Paid</option>
+                        <option value="draft" <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $status == "draft") echo "selected" ?>>Draft</option>
+                        <option value="pending" <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && $status == "pending") echo "selected" ?>>Pending</option>
                     </select>
                     <div class="invalid-feedback">
                         <?php if (isset($errors['status'])) : ?>

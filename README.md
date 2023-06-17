@@ -3,11 +3,11 @@
 - Student Number: **041058137**
 - Section Number: **CST8257-300**
 
-- What validation techniques did you use for this project?
-I used regular expressions for the name, the empty function to check if values were empty, filter_var with the filters and in_ array provided by PHP 
+-Beyond incorporating the invoice_manager database, what other refactoring did you do for this part of the project?
+refactor from session to database
 
-- In your own words, why is it important to add validation to the forms?
-To keep the data accuracy, easy to manage and security.
+-In your own words, why is it important to use prepared statements and when should you use them?
+consistency
 
-- What improvements or changes would you make to the project either in additional features or improvement in the existing code?
-update and delete the invoices
+-How did using a database to manage the data differ from using a session array? Which do you prefer and why?
+database, easier to use and protection of data
