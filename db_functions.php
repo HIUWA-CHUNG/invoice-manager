@@ -1,6 +1,5 @@
 <?php
 
-
 require "data.php";
 
 $dsn = "mysql:host=localhost;dbname=invoice_manager";
@@ -77,6 +76,29 @@ function deleteInvoice($invoiceNumber)
     $query = "DELETE FROM invoices WHERE number= :number";
     $statement = $db->prepare($query);
     $statement->execute([":number" => $invoiceNumber]);
+}
+
+
+function save_invoice_file($invoiceId)
+{
+    $pdf = $_FILES["invoiceFile"];
+
+    if ($pdf["error"] === UPLOAD_ERR_OK) {
+
+        $ext = pathinfo($pdf["name"], PATHINFO_EXTENSION);
+
+        $fileName = $invoiceId . "." . $ext;
+
+        if (!file_exists("documents/")) {
+            mkdir("documents/");
+        }
+
+        $destination = "documents/" . $fileName;
+
+        return move_uploaded_file($pdf["tmp_name"], $destination);
+    }
+
+    return false;
 }
 
 ?>;

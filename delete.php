@@ -1,6 +1,6 @@
 <?php
 
-require "db.php";
+require "db_functions.php";
 
 if (isset($_POST["number"])) {
     deleteInvoice($_POST["number"]);

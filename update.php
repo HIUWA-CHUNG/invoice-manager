@@ -1,6 +1,6 @@
 <?php
 require "data.php";
-require "db.php";
+require "db_functions.php";
 
 function sanitize($data)
 {
@@ -54,6 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         updateInvoice($updated_invoice);
 
+        save_invoice_file($updated_invoice["number"]);
+
         header('Location: index.php');
     }
 }
@@ -92,7 +94,7 @@ if (isset($_GET["number"])) {
             <a href="index.php">Back</a>
         </div>
         <div class="card bg-light py-4">
-            <form method="post" class="px-5">
+            <form method="post" class="px-5" enctype="multipart/form-data">
                 <div class="pb-3">
                     <label class="form-label" for="client-number">Client Number</label>
                     <input class="form-control " type="text" id="client-number" name="client-number" placeholder="Client Number" value="<?php echo $invoice_to_edit["number"] ?>" disabled>
@@ -137,6 +139,10 @@ if (isset($_GET["number"])) {
                             <?php echo $errors['status']; ?>
                         <?php endif; ?>
                     </div>
+                </div>
+                <div class="pb-3">
+                    <label class="form-label" for="file">Invoice File</label>
+                    <input type="file" name="invoiceFile" id="file" class="form-control" accept=".pdf">
                 </div>
                 <div class="pb-3">
                     <button type="submit" class="btn btn-primary">Add</button>

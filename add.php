@@ -1,7 +1,7 @@
 <?php
 
 require "data.php";
-require "db.php";
+require "db_functions.php";
 
 function getInvoiceNumber($length = 5)
 {
@@ -65,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         addInvoice($submission);
 
+        save_invoice_file($submission["number"]);
+
         header("Location: index.php");
     }
 }
@@ -90,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             <a href="index.php">Back</a>
         </div>
         <div class="card bg-light py-4">
-            <form method="post" action="add.php" class="px-5">
+            <form method="post" action="add.php" class="px-5" enctype="multipart/form-data">
                 <div class="pb-3">
                     <label class="form-label" for="name">Client Name</label>
                     <input class="form-control <?php if (isset($errors['client'])) :  ?> is-invalid <?php endif; ?>" type="text" id="name" name="client" placeholder="Client Name" value="<?php echo $client ?? "" ?>">
@@ -131,6 +133,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                             <?php echo $errors['status']; ?>
                         <?php endif; ?>
                     </div>
+                </div>
+                <div class="pb-3">
+                    <label class="form-label" for="file">Invoice File</label>
+                    <input type="file" name="invoiceFile" id="file" class="form-control" accept=".pdf">
                 </div>
                 <div class="pb-3">
                     <button type="submit" class="btn btn-primary">Add</button>
